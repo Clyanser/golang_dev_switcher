@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoSwitch Design V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-sidebar: #0A0A0A;
+            --bg-card: #111111;
+            --bg-card-hover: #161616;
+            --border: #222;
+            --border-highlight: #333;
+            --text-main: #EDEDED;
+            --text-muted: #888;
+            --accent: #0070F3;
+            --accent-glow: rgba(0, 112, 243, 0.15);
+            --success: #00C851;
+            --warning: #FBBC04;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 12px 32px 12px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #0070F3 0%, #00C851 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: white;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: 0 1px 0 var(--border);
+        }
+
+        .nav-icon {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-body);
+        }
+
+        .header {
+            height: 72px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+
+        .page-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            width: 300px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--border-highlight);
+        }
+
+        .content {
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* Version List */
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .list-header {
+            display: grid;
+            grid-template-columns: 1.5fr 3fr 1fr 1fr;
+            padding: 0 20px 12px 20px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .version-row {
+            display: grid;
+            grid-template-columns: 1.5fr 3fr 1fr 1fr;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .version-row:hover {
+            transform: translateY(-1px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-highlight);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .version-row.active {
+            background: rgba(0, 112, 243, 0.03);
+            border-color: rgba(0, 112, 243, 0.3);
+            box-shadow: 0 0 0 1px rgba(0, 112, 243, 0.1);
+        }
+
+        .col-version {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .version-icon {
+            width: 32px;
+            height: 32px;
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .version-row.active .version-icon {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .version-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        .col-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 20px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #1A1A1A;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .tag.active {
+            color: var(--success);
+            background: rgba(0, 200, 81, 0.1);
+            border-color: rgba(0, 200, 81, 0.2);
+        }
+
+        .tag.beta {
+            color: var(--warning);
+            background: rgba(251, 188, 4, 0.1);
+            border-color: rgba(251, 188, 4, 0.2);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        .btn-active {
+            border: none;
+            background: transparent;
+            color: var(--success);
+            cursor: default;
+        }
+
+        .btn-active:hover {
+            background: transparent;
+            color: var(--success);
+        }
+
+        /* Demo Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .version-row {
+            animation: fadeIn 0.4s ease-out backwards;
+        }
+
+        .version-row:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .version-row:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .version-row:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">G</div>
+            <span class="logo-text">GoSwitch</span>
+        </div>
+
+        <div class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            本地环境 (Local)
+        </div>
+        <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            下载中心 (Download)
+        </div>
+
+        <div style="flex:1"></div>
+
+        <div style="padding: 12px; background: #111; border-radius: 8px; border: 1px solid #222;">
+            <div style="font-size: 10px; color: #666; font-weight: bold; margin-bottom: 6px;">CURRENT VERSION</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div
+                    style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success);">
+                </div>
+                <div style="font-size: 13px; font-weight: 600; color: white;">go1.21.5</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="header">
+            <div class="page-title">已安装版本 (Installed)</div>
+            <input type="text" class="search-bar" placeholder="Filter versions...">
+        </div>
+
+        <div class="content">
+            <div class="list-header">
+                <div>Version</div>
+                <div>Location</div>
+                <div>Status</div>
+                <div style="text-align: right;">Action</div>
+            </div>
+
+            <div class="version-list">
+                <!-- Active Version -->
+                <div class="version-row active">
+                    <div class="col-version">
+                        <div class="version-icon">GO</div>
+                        <span class="version-name">go1.21.5</span>
+                    </div>
+                    <div class="col-path">C:\Users\Dev\.goswitch\sdk\go1.21.5</div>
+                    <div><span class="tag active">Active</span></div>
+                    <div style="text-align: right;">
+                        <button class="btn btn-active">Currently Used</button>
+                    </div>
+                </div>
+
+                <!-- Installed Version -->
+                <div class="version-row">
+                    <div class="col-version">
+                        <div class="version-icon">GO</div>
+                        <span class="version-name">go1.20.4</span>
+                    </div>
+                    <div class="col-path">C:\Users\Dev\.goswitch\sdk\go1.20.4</div>
+                    <div><span class="tag">Stable</span></div>
+                    <div style="text-align: right;">
+                        <button class="btn">Switch</button>
+                    </div>
+                </div>
+
+                <!-- System Version -->
+                <div class="version-row">
+                    <div class="col-version">
+                        <div class="version-icon">SYS</div>
+                        <span class="version-name">System (1.19.2)</span>
+                    </div>
+                    <div class="col-path">C:\Program Files\Go</div>
+                    <div><span class="tag">System</span></div>
+                    <div style="text-align: right;">
+                        <button class="btn">Switch</button>
+                    </div>
+                </div>
+
+                <!-- Beta Version -->
+                <div class="version-row">
+                    <div class="col-version">
+                        <div class="version-icon">RC</div>
+                        <span class="version-name">go1.22rc1</span>
+                    </div>
+                    <div class="col-path">C:\Users\Dev\.goswitch\sdk\go1.22rc1</div>
+                    <div><span class="tag beta">Beta</span></div>
+                    <div style="text-align: right;">
+                        <button class="btn">Switch</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

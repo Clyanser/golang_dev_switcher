@@ -1,0 +1,4 @@
+.local_gopath/
+build/
+frontend/dist/
+frontend/wailsjs/
